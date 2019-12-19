@@ -31,14 +31,29 @@ def get_regular(df, metadata):
     return df[regular_attributes], regular_attributes
 
 
+def get_special(df, metadata):
+    special_attributes = []
+    for name, data in metadata.items():
+        column_type, column_role = data
+        if column_role is not None:
+            special_attributes.append(name)
+    return df[special_attributes], special_attributes
+
+
 def get_type(attributeName, metadata):
     raise Exception("Not yet implemented")
     return None
 
 
 def set_role(df, attribute_name, role):
-    raise Exception("Not yet implemented")
-    return None
+    # TODO
+    # Roles need to be unique. We don't check this!
+    if attribute_name not in df.rm_metadata:
+        df.rm_metadata[attribute_name] = ("attribute", role)
+    else:
+        df.rm_metadata[attribute_name] = (df.rm_metadata[attribute_name][0], role)
+
+    return df
 
 
 def check_capabilities(metadata, capabilities):
@@ -48,9 +63,9 @@ def check_capabilities(metadata, capabilities):
             if availableCapability == "POLYNOMINAL_ATTRIBUTES":
                 for name, data in metadata.items():
                     column_type, column_role = data
-                    if(column_type == "nominal" or column_type=="polynominal"):
-                        raise Exception("This operator does not support polynominal data, but got polynominal attribute")
-
+                    if (column_type == "nominal" or column_type == "polynominal"):
+                        raise Exception(
+                            "This operator does not support polynominal data, but got polynominal attribute")
 
 
 def get_available_capabilities():
