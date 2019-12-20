@@ -1,5 +1,8 @@
 import pandas as pd
 
+nominal_value_list = ['nominal', 'polynominal', 'binominal']
+numerical_value_list = ['numeric', 'integer', 'real']
+
 
 def get_label(df, metadata):
     """Get the label of the ExampleSet.
@@ -49,14 +52,15 @@ def get_type(attributeName, metadata):
 
 def is_nominal(attributeName, metadata):
     rm_type = metadata[attributeName][0]
-    if (rm_type == 'nominal' or rm_type == 'polynominal' or rm_type == 'binominal'):
+
+    if rm_type in nominal_value_list:
         return True
     return False
 
 
 def is_numerical(attributeName, metadata):
     rm_type = metadata[attributeName][0]
-    if (rm_type == 'numeric' or rm_type == 'integer' or rm_type == 'real'):
+    if rm_type in numerical_value_list:
         return True
     return False
 
