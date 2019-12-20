@@ -28,6 +28,9 @@ def get_regular(df, metadata):
             regular_attributes.append(name)
     if len(regular_attributes) is 0:
         raise Exception("The data was supposed to have regular attributes, but got none?")
+
+    regular_attributes = sorted(regular_attributes)
+
     return df[regular_attributes], regular_attributes
 
 
@@ -41,8 +44,21 @@ def get_special(df, metadata):
 
 
 def get_type(attributeName, metadata):
-    raise Exception("Not yet implemented")
-    return None
+    return metadata[attributeName][0]
+
+
+def is_nominal(attributeName, metadata):
+    rm_type = metadata[attributeName][0]
+    if (rm_type == 'nominal' or rm_type == 'polynominal' or rm_type == 'binominal'):
+        return True
+    return False
+
+
+def is_numerical(attributeName, metadata):
+    rm_type = metadata[attributeName][0]
+    if (rm_type == 'numeric' or rm_type == 'integer' or rm_type == 'real'):
+        return True
+    return False
 
 
 def set_role(df, attribute_name, role):
