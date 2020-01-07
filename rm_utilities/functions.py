@@ -72,28 +72,62 @@ def set_role(df, attribute_name, role):
     return df
 
 
-def check_capabilities(metadata, capabilities):
-    for availableCapability in get_available_capabilities():
-        if availableCapability not in capabilities:
-            # we need to check
-            if availableCapability == "POLYNOMINAL_ATTRIBUTES":
-                for name, data in metadata.items():
-                    column_type, column_role = data
-                    if (column_type == "nominal" or column_type == "polynominal"):
-                        raise Exception(
-                            "This operator does not support polynominal data, but got polynominal attribute")
+def process_params(params):
+    for i in params.index:
+        print(params['type'][i])
+        if (params['type'][i] == 'ParameterTypeInt'):
+            params['value'][i] = int(params['value'][i])
+        elif (params['type'][i] == 'ParameterTypeString'):
+            params['value'][i] = __process_parameter_string__(params['value'][i])
+        elif (params['type'][i] == 'ParameterTypeDouble'):
+            params['value'][i] = float(params['value'][i])
+        elif (params['type'][i] == 'ParameterTypeBoolean'):
+            params['value'][i] = __process_parameter_string__(params['value'][i])
+        elif (params['type'][i] == 'ParameterTypeStringCategory'):
+            params['value'][i] = __process_parameter_string__(params['value'][i])
+        elif (params['type'][i] == 'ParameterTypeCategory'):
+            params['value'][i] = __process_parameter_string__(params['value'][i])
+
+    params_dict = dict(zip(params.key, params.value))
+    # replace string None with KeyWord None
+    # for key,value in params_dict.items():
+    #	if value == 'None':
+    #		params_dict[key] = None
+    return params_dict
 
 
-def get_available_capabilities():
-    capabilites = []
-    capabilites.append("POLYNOMINAL_ATTRIBUTES")
-    capabilites.append("BINOMINAL_ATTRIBUTES")
-    capabilites.append("WEIGHTED_EXAMPLES")
-    capabilites.append("MISSING_VALUES")
-    capabilites.append("NO_LABEL")
-    capabilites.append("POLYNOMINAL_LABEL")
-    capabilites.append("ONE_CLASS_LABEL")
-    return capabilites
+def __process_parameter_string__(strvalue):
+    if (strvalue == 'None'):
+        strvalue = None
+    if strvalue == "True":
+        return True
+    if strvalue == "False":
+        return False
+    return strvalue
+
+
+# def check_capabilities(metadata, capabilities):
+#     for availableCapability in get_available_capabilities():
+#         if availableCapability not in capabilities:
+#             # we need to check
+#             if availableCapability == "POLYNOMINAL_ATTRIBUTES":
+#                 for name, data in metadata.items():
+#                     column_type, column_role = data
+#                     if (column_type == "nominal" or column_type == "polynominal"):
+#                         raise Exception(
+#                             "This operator does not support polynominal data, but got polynominal attribute")
+#
+#
+# def get_available_capabilities():
+#     capabilites = []
+#     capabilites.append("POLYNOMINAL_ATTRIBUTES")
+#     capabilites.append("BINOMINAL_ATTRIBUTES")
+#     capabilites.append("WEIGHTED_EXAMPLES")
+#     capabilites.append("MISSING_VALUES")
+#     capabilites.append("NO_LABEL")
+#     capabilites.append("POLYNOMINAL_LABEL")
+#     capabilites.append("ONE_CLASS_LABEL")
+#     return capabilites
 
 
 def metadata_to_string(metadata, html=True):
