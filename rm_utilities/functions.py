@@ -75,6 +75,10 @@ def set_role(df, attribute_name, role):
 
     return df
 
+def set_roles(df, role_dict):
+    for name, role in role_dict.items():
+        set_role(df, name, role)
+    return df
 
 def process_params(params):
     for i in params.index:
