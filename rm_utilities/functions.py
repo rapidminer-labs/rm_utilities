@@ -58,6 +58,31 @@ def is_nominal(attributeName, metadata):
     return False
 
 
+def is_binominal(attributeName, metadata, df=None):
+    """Returns true if the attribute is binominal.
+    If df is not defined this is done using metadata.
+    If df is set the data is checked for the type.
+    This is helpful because a polynominal or nominal
+    attribute can have only 2 classes and thus be bi-nominal.
+
+    Returns
+    -------
+    label : pandas data frame
+    label_name : String
+    """
+    if df is None:
+        rm_type = metadata[attributeName][0]
+        if rm_type is "binominal":
+            return True
+        return False
+    else:
+        count = df[attributeName].nunique()
+        if (count == 2):
+            return True
+        else:
+            return False
+
+
 def is_numerical(attributeName, metadata):
     rm_type = metadata[attributeName][0]
     if rm_type in numerical_value_list:
@@ -75,10 +100,12 @@ def set_role(df, attribute_name, role):
 
     return df
 
+
 def set_roles(df, role_dict):
     for name, role in role_dict.items():
         set_role(df, name, role)
     return df
+
 
 def process_params(params):
     for i in params.index:
