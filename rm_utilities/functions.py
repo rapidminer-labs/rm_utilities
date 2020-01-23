@@ -1,7 +1,17 @@
 import pandas as pd
+from enum import Enum
 
 nominal_value_list = ['nominal', 'polynominal', 'binominal']
 numerical_value_list = ['numeric', 'integer', 'real']
+
+
+class Datatypes(Enum):
+    nominal = 1
+    polynominal = 2
+    binominal = 3
+    numeric = 4
+    integer = 5
+    real = 6
 
 
 def get_label(df, metadata):
@@ -99,6 +109,14 @@ def set_role(df, attribute_name, role):
         df.rm_metadata[attribute_name] = (df.rm_metadata[attribute_name][0], role)
 
     return df
+
+def set_type(df, attribute_name, type):
+    #(df.rm_metadata[attribute_name][0], role)
+    #df.rm_metadata[attributeName][0] = str(type.name)
+    if attribute_name not in df.rm_metadata:
+        df.rm_metadata[attribute_name] = (type.name, "regular")
+    else:
+        df.rm_metadata[attribute_name] = (type.name, df.rm_metadata[attribute_name][1])
 
 
 def set_roles(df, role_dict):
